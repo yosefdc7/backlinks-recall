@@ -1,6 +1,6 @@
 {
-	"id": "influx",
-	"name": "Influx",
+	"id": "influx-section-excerpts",
+	"name": "Influx Section Excerpts",
 	"version": "2.3.1",
 	"minAppVersion": "1.0.0",
 	"description": "Transform your Obsidian backlinks from simple links into rich, contextual excerpts. See the actual content surrounding each link, turning your note connections into genuine insights.",

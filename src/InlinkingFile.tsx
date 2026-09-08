@@ -2,6 +2,7 @@ import { TFile, CachedMetadata } from 'obsidian';
 import { ApiAdapter } from './apiAdapter';
 import InfluxFile from './InfluxFile';
 import { StructuredText } from './StructuredText';
+import { getLinkedHeadingBodyLines, parseHeading } from './section-extraction';
 
 const FRONTMATTER_KEY = 'influx-title' // Unexposed feature to show frontmatter value as title for clipping.
 
@@ -41,8 +42,22 @@ export class InlinkingFile {
         this.setTitle()
         this.isLinkInTitle = this.titleLineNum !== undefined && lineNumbersOfLinks.includes(this.titleLineNum)
 
-        if (this.isLinkInTitle) {
-            this.summary = struct.stringify()
+        const linkedHeadingLines = lineNumbersOfLinks.filter(lineNumber => parseHeading(this.content.split('\n')[lineNumber] ?? ''))
+        if (linkedHeadingLines.length > 0) {
+            const explicitIncludes: boolean[] = []
+            const headingBodyLines = getLinkedHeadingBodyLines(this.content, linkedHeadingLines)
+            headingBodyLines.forEach(lineNumber => { explicitIncludes[lineNumber] = true })
+
+            const ordinaryLinkLines = lineNumbersOfLinks.filter(lineNumber => !linkedHeadingLines.includes(lineNumber))
+            if (ordinaryLinkLines.length > 0) {
+                ordinaryLinkLines.forEach(lineNumber => {
+                    explicitIncludes[lineNumber] = true
+                    struct.ancestors[`${lineNumber}`.padStart(4, '0')]?.forEach(line => { explicitIncludes[Number(line)] = true })
+                    struct.descendants[`${lineNumber}`.padStart(4, '0')]?.forEach(line => { explicitIncludes[Number(line)] = true })
+                })
+            }
+
+            this.summary = struct.stringify(explicitIncludes).trim()
         }
         else {
             this.summary = struct.stringifyBranchesOfNodesWithLinks(lineNumbersOfLinks)
