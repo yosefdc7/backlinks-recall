@@ -3,6 +3,7 @@ import { ApiAdapter, BacklinksObject, ExtendedInlinkingFile } from './apiAdapter
 import { InlinkingFile } from './InlinkingFile';
 import ObsidianInflux from './main';
 import { v4 as uuidv4 } from 'uuid';
+import { isBlankExcerpt } from './section-extraction';
 
 
 export default class InfluxFile {
@@ -94,21 +95,25 @@ export default class InfluxFile {
                 validFiles.push(file)
             }
         }
+        let failedCount = 0;
         await Promise.all(validFiles.map(async (file: TFile) => {
             try {
                 const inlinkingFile = new InlinkingFile(file, this.api);
                 await inlinkingFile.makeSummary(this);
-                inlinkingFilesNew.push(inlinkingFile);
+                if (!isBlankExcerpt(inlinkingFile.summary)) {
+                    inlinkingFilesNew.push(inlinkingFile);
+                }
             } catch (error) {
+                failedCount++;
                 console.error(`[Influx] Failed to process file ${file.path}:`, error);
                 // Continue processing other files
             }
         }))
         this.inlinkingFiles = inlinkingFilesNew
 
-        // Warn user if some files failed to process
-        if (inlinkingFilesNew.length < validFiles.length) {
-            console.warn(`[Influx] Only ${inlinkingFilesNew.length} of ${validFiles.length} files processed successfully`);
+        // Warn user if some files failed to process due to errors
+        if (failedCount > 0) {
+            console.warn(`[Influx] ${failedCount} of ${validFiles.length} files failed to process`);
         }
     }
     async renderAllMarkdownBlocks() {
