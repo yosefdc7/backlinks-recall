@@ -1,4 +1,4 @@
-import { Plugin, TAbstractFile, TFile, WorkspaceLeaf, View } from 'obsidian';
+import { Plugin, TAbstractFile, TFile, WorkspaceLeaf, View, Platform } from 'obsidian';
 import { ObsidianInfluxSettingsTab } from './settings';
 import { asyncDecoBuilderExt } from './cm6/asyncViewPlugin';
 import InfluxFile from './InfluxFile';
@@ -143,7 +143,9 @@ export default class ObsidianInflux extends Plugin {
 		this.stylesheetForPreview = createStyleSheet(this.api, true)
 		this.data = await this.loadDataInitially()
 
-		this.registerEditorExtension(asyncDecoBuilderExt)
+		if (!Platform.isMobile) {
+			this.registerEditorExtension(asyncDecoBuilderExt);
+		}
 
 		this.addSettingTab(new ObsidianInfluxSettingsTab(this.app, this));
 
