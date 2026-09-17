@@ -7,7 +7,6 @@ import * as React from "react";
 import { createRoot, Root } from "react-dom/client";
 import { ApiAdapter } from './apiAdapter';
 import { createStyleSheet, StyleSheetType } from './createStyleSheet';
-import { EditorView } from '@codemirror/view';
 
 // Extend global Window interface for test function
 declare global {
@@ -76,7 +75,6 @@ export interface Data {
 
 // Constants for magic numbers
 const DEBOUNCE_DELAY_MS = 100;
-const DELAYED_CALLBACK_TIMEOUT_MS = 2000;
 
 // Debug mode - set to true to enable verbose logging
 const DEBUG_MODE = false;
@@ -127,7 +125,6 @@ export default class ObsidianInflux extends Plugin {
 	stylesheetForPreview: StyleSheetType;
 	api: ApiAdapter;
 	data: Data;
-	delayedShowCallbacks: { editor: EditorView, callback: () => void, time: number }[] = [];
 	private updateDebouncers: { [key: string]: NodeJS.Timeout } = {};
 	// Track React roots for proper cleanup to prevent memory leaks
 	// Changed from WeakMap to Map to enable explicit cleanup and iteration
@@ -172,11 +169,6 @@ export default class ObsidianInflux extends Plugin {
 			this.triggerUpdates('layout-change');
 		}));
 
-		// Use window.setInterval to avoid TypeScript type inference issues
-		const timerId = window.setInterval(this.tick.bind(this), 1000);
-		// Store interval ID for cleanup if needed
-		this.register(() => window.clearInterval(timerId));
-
 		// Make plugin instance globally accessible for CodeMirror extensions
 		(window as any).influxPlugin = this;
 
@@ -204,38 +196,6 @@ export default class ObsidianInflux extends Plugin {
 		window.testInfluxReadingView = () => {
 			this.updateInfluxInAllPreviews();
 		};
-	}
-
-	public delayShowInflux(editor: EditorView, showCallback: () => void) {
-		// More efficient: filter and add in single operation
-		this.delayedShowCallbacks = this.delayedShowCallbacks.filter(cb => cb.editor !== editor);
-		this.delayedShowCallbacks.push({
-			editor: editor,
-			time: Date.now(),
-			callback: showCallback
-		});
-	}
-
-	private tick() {
-		const now = Date.now();
-		const readyCallbacks: Array<() => void> = [];
-		const remaining: Array<{ editor: EditorView; callback: () => void; time: number }> = [];
-
-		// Single pass: separate ready callbacks from remaining ones
-		for (const cb of this.delayedShowCallbacks) {
-			if (now > cb.time + DELAYED_CALLBACK_TIMEOUT_MS) {
-				readyCallbacks.push(cb.callback);
-			} else {
-				remaining.push(cb);
-			}
-		}
-
-		this.delayedShowCallbacks = remaining;
-
-		// Execute ready callbacks after updating state to avoid re-entry issues
-		for (const callback of readyCallbacks) {
-			callback();
-		}
 	}
 
 	async loadDataInitially() {
