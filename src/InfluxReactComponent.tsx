@@ -177,11 +177,9 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 										<div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
 											<span style={{ fontSize: '1.05em', flexShrink: 0 }} aria-hidden="true">📄</span>
 											<a
-												data-href={extended.inlinkingFile.file.basename}
-												href={extended.inlinkingFile.file.basename}
+												data-href={extended.inlinkingFile.file.path}
+												href={extended.inlinkingFile.file.path}
 												className="internal-link"
-												target="_blank"
-												rel="noopener"
 												style={{
 													fontWeight: 600,
 													fontSize: '1em',
@@ -189,7 +187,13 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 													textOverflow: 'ellipsis',
 													whiteSpace: 'nowrap',
 												}}
-												onClick={(e) => e.stopPropagation()}
+												onClick={async (e) => {
+													e.preventDefault();
+													e.stopPropagation();
+													const isNewTab = e.metaKey || e.ctrlKey;
+													const leaf = influxFile.influx.app.workspace.getLeaf(isNewTab);
+													await leaf.openFile(extended.inlinkingFile.file);
+												}}
 											>
 												{extended.inlinkingFile.file.basename}
 											</a>
