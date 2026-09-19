@@ -143,9 +143,7 @@ export default class ObsidianInflux extends Plugin {
 		this.stylesheetForPreview = createStyleSheet(this.api, true)
 		this.data = await this.loadDataInitially()
 
-		if (!Platform.isMobile) {
-			this.registerEditorExtension(asyncDecoBuilderExt);
-		}
+		this.registerEditorExtension(asyncDecoBuilderExt);
 
 		this.addSettingTab(new ObsidianInfluxSettingsTab(this.app, this));
 

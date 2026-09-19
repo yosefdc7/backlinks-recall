@@ -1,7 +1,7 @@
 {
 	"id": "backlinks-recall",
 	"name": "Backlinks Recall",
-	"version": "2.4.0",
+	"version": "2.4.1",
 	"minAppVersion": "1.0.0",
 	"description": "Living timeline of backlinks and contextual section excerpts with Amplenote-style mobile UX.",
 	"author": "Josef Romeo & Jens M Gleditsch",
