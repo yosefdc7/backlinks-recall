@@ -19,7 +19,9 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 	const [components, setComponents] = React.useState(influxFile.components)
 	const [stylesheet, setStyleSheet] = React.useState(sheet)
 	const [collapsed, setCollapsed]: [string[], React.Dispatch<React.SetStateAction<string[]>>] = React.useState(influxFile.collapsed ? components.map(component => component.inlinkingFile.file.basename) : [])
-	const [toggleAllToOpen, setToggleAllToOpen] = React.useState(influxFile.collapsed)
+
+	const allBasenames = components.map(component => component.inlinkingFile.file.basename)
+	const isAllCollapsed = allBasenames.length > 0 && allBasenames.every(name => collapsed.includes(name))
 
 	const doToggle = (basename: string) => {
 		if (collapsed.includes(basename)) {
@@ -31,14 +33,11 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 	}
 
 	const toggleAll = () => {
-		const all = components.map(component => component.inlinkingFile.file.basename)
-		if (toggleAllToOpen) {
+		if (isAllCollapsed) {
 			setCollapsed([])
-			setToggleAllToOpen(false)
 		}
 		else {
-			setCollapsed(all)
-			setToggleAllToOpen(true)
+			setCollapsed(allBasenames)
 		}
 	}
 
@@ -104,16 +103,14 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 						</svg>
 					</div> */}
 					<div className="clickable-icon nav-action-button"
-						aria-label={toggleAllToOpen ? 'Expand all' : 'Collapse all'}
+						aria-label={isAllCollapsed ? 'Expand all' : 'Collapse all'}
 						onClick={() => toggleAll()}
 					>
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon lucide-move-vertical">
-							<polyline points="8 18 12 22 16 18">
-							</polyline>
-							<polyline points="8 6 12 2 16 6">
-							</polyline>
-							<line x1="12" y1="2" x2="12" y2="22">
-							</line>
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon lucide-chevrons-up-down">
+							<path d="m7 15 5 5 5-5">
+							</path>
+							<path d="m7 9 5-5 5 5">
+							</path>
 						</svg>
 					</div>
 				</div>
@@ -134,9 +131,8 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 
 				<div
 					onClick={() => toggleAll()}
-					className={`tree-item-self is-clickable 
-					${'' //	isOpen ? '' : 'is-collapsed'
-						}`}
+					className={`tree-item-self is-clickable ${isAllCollapsed ? 'is-collapsed' : ''}`}
+					style={{ cursor: 'pointer', userSelect: 'none' }}
 				>
 					<div className="tree-item-inner" >
 						Linked mentions
@@ -200,20 +196,30 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 										</div>
 
 										<div 
-											className="tree-item-icon collapse-icon"
+											className="influx-collapse-btn"
+											aria-label={inlinkedCollapsed ? "Expand" : "Collapse"}
 											style={{
+												position: 'static',
+												margin: '0 0 0 auto',
 												display: 'flex',
 												alignItems: 'center',
 												justifyContent: 'center',
-												width: '32px',
-												height: '32px',
+												width: '38px',
+												height: '38px',
+												minWidth: '38px',
 												flexShrink: 0,
+												cursor: 'pointer',
+												borderRadius: '4px',
+											}}
+											onClick={(e) => {
+												e.stopPropagation();
+												doToggle(extended.inlinkingFile.file.basename);
 											}}
 										>
 											<svg 
 												xmlns="http://www.w3.org/2000/svg" 
-												width="20" 
-												height="20" 
+												width="18" 
+												height="18" 
 												viewBox="0 0 24 24" 
 												fill="none" 
 												stroke="currentColor" 
@@ -221,8 +227,8 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 												strokeLinecap="round" 
 												strokeLinejoin="round" 
 												style={{
-													transform: inlinkedCollapsed ? 'rotate(0deg)' : 'rotate(180deg)',
-													transition: 'transform 0.2s ease',
+													transform: inlinkedCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+													transition: 'transform 0.15s ease',
 												}}
 											>
 												<path d="M6 9l6 6 6-6"></path>

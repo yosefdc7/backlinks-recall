@@ -52,6 +52,10 @@ export class InfluxWidget extends WidgetType {
                this.influxFile?.file?.path === influxWidget.influxFile?.file?.path;
     }
 
+    ignoreEvent(event: Event): boolean {
+        return true;
+    }
+
     toDOM(view: EditorView) {
         const container = document.createElement(INFLUX_ELEMENT_TAG)
         // Use unique ID based on file path to avoid conflicts
