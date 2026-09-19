@@ -83,41 +83,6 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 		}}
 		> 
 
-			<div className="nav-header">
-
-				<div className="nav-buttons-container">
-					{/* <div className="clickable-icon nav-action-button" aria-label="Collapse results">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon lucide-list">
-							<line x1="8" y1="6" x2="21" y2="6">
-							</line>
-							<line x1="8" y1="12" x2="21" y2="12">
-							</line>
-							<line x1="8" y1="18" x2="21" y2="18">
-							</line>
-							<line x1="3" y1="6" x2="3.01" y2="6">
-							</line>
-							<line x1="3" y1="12" x2="3.01" y2="12">
-							</line>
-							<line x1="3" y1="18" x2="3.01" y2="18">
-							</line>
-						</svg>
-					</div> */}
-					<div className="clickable-icon nav-action-button"
-						aria-label={isAllCollapsed ? 'Expand all' : 'Collapse all'}
-						onClick={() => toggleAll()}
-					>
-						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon lucide-chevrons-up-down">
-							<path d="m7 15 5 5 5-5">
-							</path>
-							<path d="m7 9 5-5 5 5">
-							</path>
-						</svg>
-					</div>
-				</div>
-
-			</div>
-
-
 			<div className="search-input-container" style={{ display: "none" }}>
 				<input type="search" spellCheck="false" placeholder="Type to start search...">
 
@@ -127,19 +92,56 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 			</div>
 
 
-			<div className="backlink-pane">
+			<div className="backlink-pane" style={{ width: '100%' }}>
 
 				<div
-					onClick={() => toggleAll()}
 					className={`tree-item-self is-clickable ${isAllCollapsed ? 'is-collapsed' : ''}`}
-					style={{ cursor: 'pointer', userSelect: 'none' }}
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'space-between',
+						width: '100%',
+						minHeight: '28px',
+						padding: '2px 6px',
+						marginBottom: '4px',
+						cursor: 'pointer',
+						userSelect: 'none',
+					}}
+					onClick={() => toggleAll()}
 				>
-					<div className="tree-item-inner" >
-						Linked mentions
+					<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+						<div className="tree-item-inner" style={{ fontWeight: 600 }}>
+							Linked mentions
+						</div>
+
+						<div className="tree-item-flair-outer">
+							<span className="tree-item-flair">{components.length}</span>
+						</div>
 					</div>
 
-					<div className="tree-item-flair-outer">
-						<span className="tree-item-flair">{components.length}</span>
+					<div
+						className="clickable-icon nav-action-button"
+						aria-label={isAllCollapsed ? 'Expand all' : 'Collapse all'}
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							width: '24px',
+							height: '24px',
+							padding: 0,
+							margin: 0,
+						}}
+						onClick={(e) => {
+							e.stopPropagation();
+							toggleAll();
+						}}
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon lucide-chevrons-up-down">
+							<path d="m7 15 5 5 5-5">
+							</path>
+							<path d="m7 9 5-5 5 5">
+							</path>
+						</svg>
 					</div>
 				</div>
 
@@ -155,7 +157,7 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 
 								<div key={extended.inlinkingFile.file.basename}
 									className={`tree-item search-result ${inlinkedCollapsed ? 'is-collapsed' : ''}`}
-									style={{ marginBottom: '1rem', width: '100%' }}
+									style={{ marginBottom: '4px', width: '100%' }}
 								>
 									<div className="tree-item-self search-result-file-title"
 										style={{
@@ -163,22 +165,22 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 											alignItems: 'center',
 											justifyContent: 'space-between',
 											width: '100%',
-											minHeight: '40px',
-											padding: '6px 8px',
-											borderRadius: '6px',
+											minHeight: '28px',
+											padding: '2px 6px',
+											borderRadius: '4px',
 											cursor: 'pointer',
 										}}
 										onClick={() => doToggle(extended.inlinkingFile.file.basename)}
 									>
 										<div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
-											<span style={{ fontSize: '1.05em', flexShrink: 0 }} aria-hidden="true">📄</span>
+											<span style={{ fontSize: '0.95em', flexShrink: 0 }} aria-hidden="true">📄</span>
 											<a
 												data-href={extended.inlinkingFile.file.path}
 												href={extended.inlinkingFile.file.path}
 												className="internal-link"
 												style={{
 													fontWeight: 600,
-													fontSize: '1em',
+													fontSize: '0.95em',
 													overflow: 'hidden',
 													textOverflow: 'ellipsis',
 													whiteSpace: 'nowrap',
@@ -204,9 +206,9 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 												display: 'flex',
 												alignItems: 'center',
 												justifyContent: 'center',
-												width: '38px',
-												height: '38px',
-												minWidth: '38px',
+												width: '24px',
+												height: '24px',
+												minWidth: '24px',
 												flexShrink: 0,
 												cursor: 'pointer',
 												borderRadius: '4px',
@@ -218,8 +220,8 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 										>
 											<svg 
 												xmlns="http://www.w3.org/2000/svg" 
-												width="18" 
-												height="18" 
+												width="14" 
+												height="14" 
 												viewBox="0 0 24 24" 
 												fill="none" 
 												stroke="currentColor" 
@@ -237,7 +239,7 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 									</div>
 
 									<div className="search-result-file-matches"
-										style={inlinkedCollapsed ? { display: 'none' } : { width: '100%', marginTop: '4px' }}
+										style={inlinkedCollapsed ? { display: 'none' } : { width: '100%', marginTop: '2px' }}
 									>
 										<div className={classes.inlinkedEntries} >
 											<div

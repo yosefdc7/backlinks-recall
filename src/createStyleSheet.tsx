@@ -46,8 +46,8 @@ export function createStyleSheet(api: ApiAdapter, preview=false) {
             {         
 
                 influxComponent: {
-                    marginTop: `1.5em`,
-                    marginBottom: `2em`,
+                    marginTop: `0.75em`,
+                    marginBottom: `1em`,
                 },
 
                 inlinkedEntries: {
@@ -61,8 +61,8 @@ export function createStyleSheet(api: ApiAdapter, preview=false) {
                     paddingLeft: '0.25rem',
                     paddingRight: '0.25rem',
                     '& h1, & h2, & h3': {
-                        marginTop: '0.5em',
-                        marginBottom: '0.25em',
+                        marginTop: '0.4em',
+                        marginBottom: '0.2em',
                         fontSize: '1.1em',
                         fontWeight: '600',
                     },
@@ -73,7 +73,7 @@ export function createStyleSheet(api: ApiAdapter, preview=false) {
 
                 inlinkedEntry: {
                     '--checkbox-size': `${props.fontSize}px`,
-                    paddingBottom: '0.75rem',
+                    paddingBottom: '0.35rem',
                     width: '100%',
 
                     '& input[type=checkbox]': {

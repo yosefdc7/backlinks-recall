@@ -1,6 +1,6 @@
 {
 	"name": "backlinks-recall",
-	"version": "2.4.3",
+	"version": "2.4.4",
 	"description": "Living timeline of backlinks and contextual section excerpts with Amplenote-style mobile UX.",
 	"main": "main.js",
 	"scripts": {
