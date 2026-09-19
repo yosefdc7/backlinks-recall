@@ -1,7 +1,7 @@
 {
-	"name": "influx-section-excerpts",
-	"version": "2.3.1",
-	"description": "Transform your Obsidian backlinks from simple links into rich, contextual excerpts. See the actual content surrounding each link, turning your note connections into genuine insights.",
+	"name": "backlinks-recall",
+	"version": "2.4.0",
+	"description": "Living timeline of backlinks and contextual section excerpts with Amplenote-style mobile UX.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
@@ -13,12 +13,13 @@
 	"keywords": [
 		"obsidian",
 		"plugin",
-		"influx",
+		"backlinks-recall",
 		"backlinks",
+		"timeline",
 		"excerpts",
 		"notes"
 	],
-	"author": "Jens M Gleditsch",
+	"author": "Josef Romeo & Jens M Gleditsch",
 	"license": "MIT",
 	"devDependencies": {
 		"@babel/core": "^7.28.6",

@@ -29,7 +29,7 @@ export class ObsidianInfluxSettingsTab extends PluginSettingTab {
 
         new Setting(containerEl)
         .setName("Live update")
-        .setDesc("With live update enabled, changes in a note is immediately reflected in Infux components where that note appears. (This can reduce overall performance.)")
+        .setDesc("With live update enabled, changes in a note are immediately reflected in Backlinks Recall components where that note appears.")
         .addToggle(toggle => {
             toggle
                 .setValue(this.plugin.data.settings.liveUpdate)
@@ -39,44 +39,9 @@ export class ObsidianInfluxSettingsTab extends PluginSettingTab {
                 });
         })
 
-
-        new Setting(containerEl)
-            .setName("Sorting principle")
-            .setDesc("Order notes in which direction from the top.")
-            .addDropdown(dropdown => {
-                dropdown
-                    .addOption('NEWEST_FIRST', 'Newest first')
-                    .addOption('OLDEST_FIRST', 'Oldest first')
-                    .setValue(this.plugin.data.settings.sortingPrinciple)
-                    .onChange(async (value) => {
-                        if (value === 'NEWEST_FIRST' || value === 'OLDEST_FIRST') {
-                            this.plugin.data.settings.sortingPrinciple = value;
-                            await this.saveSettings()
-                        }
-                    });
-            })
-
-        new Setting(containerEl)
-            .setName("Sorting attribute")
-            .setDesc("Order notes according to which attribute.")
-            .addDropdown(dropdown => {
-                dropdown
-                    .addOption('ctime', 'By date created')
-                    .addOption('mtime', 'By date last modified')
-                    .addOption('FILENAME', 'By filename')
-                    .setValue(this.plugin.data.settings.sortingAttribute)
-                    .onChange(async (value) => {
-                        if (value === 'ctime' || value === 'mtime' || value === 'FILENAME') {
-                            this.plugin.data.settings.sortingAttribute = value;
-                            await this.saveSettings()
-                        }
-                    });
-
-            })
-
         new Setting(containerEl)
             .setName("List length")
-            .setDesc("Maximum number of entries to show in an Influx list initially.")
+            .setDesc("Maximum number of entries to show in a list initially (0 = no limit).")
             .addDropdown(dropdown => {
                 dropdown
                     .addOption('0', 'No limit')
@@ -85,14 +50,11 @@ export class ObsidianInfluxSettingsTab extends PluginSettingTab {
                     .addOption('15', '15')
                     .addOption('25', '25')
                     .addOption('50', '50')
-
                     .setValue(this.plugin.data.settings.listLimit.toString())
                     .onChange(async (value) => {
                         this.plugin.data.settings.listLimit = Number(value);
                         await this.saveSettings()
-
                     });
-
             })
 
         containerEl.createEl('h2', { text: 'Styling and layout' });
@@ -109,47 +71,17 @@ export class ObsidianInfluxSettingsTab extends PluginSettingTab {
                     .onChange(async (value) => {
                         this.plugin.data.settings.fontSize = Number(value);
                         await this.saveSettings()
-
                     });
-
             })
 
         new Setting(containerEl)
-            .setName("Layout variant")
-            .addDropdown(dropdown => {
-                dropdown
-                    .addOption('CENTER_ALIGNED', 'Continous stream')
-                    .addOption('ROWS', 'Note by note')
-                    .setValue(this.plugin.data.settings.variant)
-                    .onChange(async (value) => {
-                        if (value === 'CENTER_ALIGNED' || value === 'ROWS') {
-                            this.plugin.data.settings.variant = value;
-                            await this.saveSettings()
-                        }
-                    });
-
-            })
-
-            new Setting(containerEl)
-            .setName("Show Influx below text")
-            .setDesc("If disabled, Influx will be shown above the note body instead.")
+            .setName("Show Backlinks Recall below text")
+            .setDesc("If disabled, Backlinks Recall will be shown above the note body instead.")
             .addToggle(toggle => {
                 toggle
                     .setValue(!this.plugin.data.settings.influxAtTopOfPage)
                     .onChange(async (value) => {
                         this.plugin.data.settings.influxAtTopOfPage = !value;
-                        await this.saveSettings()
-                    });
-            })
-
-        new Setting(containerEl)
-            .setName("Show headers")
-            .setDesc("Influx will use the topmost markdown-formatted header it can find in a page.")
-            .addToggle(toggle => {
-                toggle
-                    .setValue(this.plugin.data.settings.entryHeaderVisible)
-                    .onChange(async (value) => {
-                        this.plugin.data.settings.entryHeaderVisible = value;
                         await this.saveSettings()
                     });
             })

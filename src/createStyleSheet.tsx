@@ -46,35 +46,25 @@ export function createStyleSheet(api: ApiAdapter, preview=false) {
             {         
 
                 influxComponent: {
-                    marginTop: `3em`, //--line-height-normal is 1.5
-                    // animation: 'fadeIn .6s',
-
+                    marginTop: `1.5em`,
+                    marginBottom: `2em`,
                 },
 
                 inlinkedEntries: {
                     fontSize: `${props.fontSize}px`,
-                    lineHeight: `${props.lineHeight}px`,
+                    lineHeight: `1.5`,
                     width: 'var(--file-line-width, 100%)',
                     maxWidth: '100%',
                     flexGrow: 1,
                     display: 'flex',
                     flexDirection: 'column',
-                    paddingLeft: '1rem',
-                    '& h1': {
-                        marginTop: '0px',
-                        marginBottom: '0px',
-                        fontSize: `${props.fontSize}px`,
-                        lineHeight: `${props.lineHeight}px`,
-                    },
-                    '& h2': {
-                        marginTop: '0px',
-                        marginBottom: '0px',
-                        fontSize: `${props.fontSize}px`,
-                        lineHeight: `${props.lineHeight}px`,
-                    },
-                    '& h3': {
-                        fontSize: `${props.fontSize}px`,
-                        lineHeight: `${props.lineHeight}px`,
+                    paddingLeft: '0.25rem',
+                    paddingRight: '0.25rem',
+                    '& h1, & h2, & h3': {
+                        marginTop: '0.5em',
+                        marginBottom: '0.25em',
+                        fontSize: '1.1em',
+                        fontWeight: '600',
                     },
                     '& mark': {
                         backgroundColor: 'var(--text-highlight-bg)',
@@ -82,72 +72,53 @@ export function createStyleSheet(api: ApiAdapter, preview=false) {
                 },
 
                 inlinkedEntry: {
-
-
                     '--checkbox-size': `${props.fontSize}px`,
-
-                    paddingBottom: !props.preview ? `${props.lineHeight}px !important` : '',
+                    paddingBottom: '0.75rem',
+                    width: '100%',
 
                     '& input[type=checkbox]': {
-                        marginTop: `-${props.lineHeight}px`,
+                        verticalAlign: 'middle',
+                        marginRight: '0.5em',
                     },
 
-                    '& li, & h1, & ul, & input, & blockquote, & p, & .callout, & .callout-title, & ol': {
-                        marginBlockEnd: !props.preview ? `-${props.lineHeight}px !important` : '',
+                    '& ul, & ol': {
+                        marginTop: '0.25em',
+                        marginBottom: '0.5em',
+                        paddingInlineStart: '1.5em',
                     },
 
-                    '& li:nth-child(1)': {
-                        marginBlockStart: !props.preview ? `-${props.lineHeight}px !important` : '',
-                    },
-
-                    '& ul': {
-                        marginTop: `${0}px`,
-                        paddingInlineStart: `${20}px`,
-                        marginBlockEnd: props.preview ? `0px !important` : '',
-
+                    '& li': {
+                        marginBlockStart: '0.2em',
+                        marginBlockEnd: '0.2em',
                     },
 
                     '& p': {
-                        paddingInlineStart: `${0}px`,
-                        marginBlockStart: `auto`,
-                        marginBlockEnd: props.preview ? `0px !important` : '',
+                        marginTop: '0.25em',
+                        marginBottom: '0.4em',
                     },
-
-                    '& li p': {
-                        marginBlockStart: !props.preview ? `-${props.lineHeight}px !important` : '',
-                    },
-
 
                     '& blockquote': {
                         borderLeft: 'var(--blockquote-border-thickness) solid',
                         borderLeftColor: 'var(--blockquote-border-color)',
-                        marginBlockStart: 0,
-                        paddingInlineStart: `${props.lineHeight/2}px`,
+                        marginBlockStart: '0.25em',
+                        marginBlockEnd: '0.25em',
+                        paddingInlineStart: '0.75em',
                         marginInlineStart: 0,
                         marginInlineEnd: 0,
-                        '& p': {
-                            marginBlockStart: !props.preview ? `-${props.lineHeight}px !important` : '',
-                        },
                     },
 
                     '& .callout': {
                         marginTop: '6px !important',
-                       // marginBottom: '0px !important',
-                        marginLeft: '1em !important',
-                        marginRight: '1em !important',
+                        marginLeft: '0px !important',
+                        marginRight: '0px !important',
                         paddingTop: 'var(--size-4-1)',
                         paddingBottom: 'var(--size-4-1)',
                         paddingRight: 'var(--size-4-1)',
                         paddingLeft: 'var(--size-4-2)',
-
                     },
 
-                    '&> .callout': {
-                        marginLeft: '0px !important',
-                    },
- 
                     '& .callout-icon': {
-                        width: 0,
+                        width: 'auto',
                     },  
 
                     '& span[data-callout-title]': {
@@ -162,22 +133,12 @@ export function createStyleSheet(api: ApiAdapter, preview=false) {
                         borderBottomLeftRadius: '2px',
                         '& span[data-callout-title-text]': {
                             color: 'rgba(var(--callout-color), 0.9)',
-                            
                         },
                     },
 
-                    // Fix for list callouts bug; https://github.com/jensmtg/influx/issues/20
-                    // '& span[class=lc-li-wrapper]': {
-                    //     marginBlockEnd: `${0}px !important`,
-                    // },
-
-                    // Fix for minimal theme bugs; https://github.com/jensmtg/influx/issues/30
                     '& a[class=tag]': {
                         verticalAlign: 'unset !important',
                     },
-
-                    
-
                 }
             }
         )

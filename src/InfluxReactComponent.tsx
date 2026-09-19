@@ -116,31 +116,6 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 							</line>
 						</svg>
 					</div>
-					<div className="clickable-icon nav-action-button"
-						aria-label="Change sort order"
-						onClick={() => influxFile.influx.toggleSortOrder()}
-					>
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon lucide-sort-asc">
-							<path d="M11 5h4">
-							</path>
-							<path d="M11 9h7">
-							</path>
-							<path d="M11 13h10">
-							</path>
-							<path d="m3 17 3 3 3-3">
-							</path>
-							<path d="M6 18V4">
-							</path>
-						</svg>
-					</div>
-					{/* <div className="clickable-icon nav-action-button" aria-label="Show search filter">
-						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon lucide-search">
-							<circle cx="11" cy="11" r="8">
-							</circle>
-							<line x1="21" y1="21" x2="16.65" y2="16.65">
-							</line>
-						</svg>
-					</div> */}
 				</div>
 
 			</div>
@@ -162,18 +137,10 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 					className={`tree-item-self is-clickable 
 					${'' //	isOpen ? '' : 'is-collapsed'
 						}`}
-				// aria-label={isOpen ? "Click to collapse" : "Click to expand"}
 				>
-
-					{/* <span className="tree-item-icon collapse-icon">
-					<svg viewBox="0 0 100 100" className="right-triangle" width="8" height="8">
-					<path fill="currentColor" stroke="currentColor" d="M94.9,20.8c-1.4-2.5-4.1-4.1-7.1-4.1H12.2c-3,0-5.7,1.6-7.1,4.1c-1.3,2.4-1.2,5.2,0.2,7.6L43.1,88c1.5,2.3,4,3.7,6.9,3.7 s5.4-1.4,6.9-3.7l37.8-59.6C96.1,26,96.2,23.2,94.9,20.8L94.9,20.8z">
-					</path></svg></span> */}
-
 					<div className="tree-item-inner" >
 						Linked mentions
 					</div>
-
 
 					<div className="tree-item-flair-outer">
 						<span className="tree-item-flair">{components.length}</span>
@@ -182,74 +149,95 @@ export default function InfluxReactComponent(props: InfluxReactComponentProps): 
 
 				<div className="search-result-container">
 
-
 					<div className="search-results-children" >
 
 						{components.map((extended: ExtendedInlinkingFile) => {
 
 							const inlinkedCollapsed = collapsed.includes(extended.inlinkingFile.file.basename)
 
-							const entryHeader = settings.entryHeaderVisible && extended.titleInnerHTML && !extended.inlinkingFile.isLinkInTitle ? (
-								<h2>
-									<span
-										dangerouslySetInnerHTML={{ __html: extended.titleInnerHTML }}
-									/>
-								</h2>
-							) : null
-
-
 							return (
 
 								<div key={extended.inlinkingFile.file.basename}
 									className={`tree-item search-result ${inlinkedCollapsed ? 'is-collapsed' : ''}`}
-									style={centered ? { display: 'flex', alignItems: 'flex-start' } : {}}
+									style={{ marginBottom: '1rem', width: '100%' }}
 								>
 									<div className="tree-item-self search-result-file-title"
-										style={centered ? { width: '160px', minWidth: '160px' } : {}}>
-
-
-										<div className="tree-item-icon collapse-icon"
-											onClick={() => doToggle(extended.inlinkingFile.file.basename)}
-										>
-											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="svg-icon right-triangle">
-												<path d="M3 8L12 17L21 8"></path>
-											</svg>
-										</div>
-
-										<div className="tree-item-inner">
+										style={{
+											display: 'flex',
+											alignItems: 'center',
+											justifyContent: 'space-between',
+											width: '100%',
+											minHeight: '40px',
+											padding: '6px 8px',
+											borderRadius: '6px',
+											cursor: 'pointer',
+										}}
+										onClick={() => doToggle(extended.inlinkingFile.file.basename)}
+									>
+										<div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
+											<span style={{ fontSize: '1.05em', flexShrink: 0 }} aria-hidden="true">📄</span>
 											<a
 												data-href={extended.inlinkingFile.file.basename}
 												href={extended.inlinkingFile.file.basename}
 												className="internal-link"
 												target="_blank"
 												rel="noopener"
+												style={{
+													fontWeight: 600,
+													fontSize: '1em',
+													overflow: 'hidden',
+													textOverflow: 'ellipsis',
+													whiteSpace: 'nowrap',
+												}}
+												onClick={(e) => e.stopPropagation()}
 											>
 												{extended.inlinkingFile.file.basename}
 											</a>
 										</div>
-										{/* <div className="tree-item-flair-outer">
-											<span className="tree-item-flair">1</span>
-										</div> */}
-									</div>
-									<div className="search-result-file-matches"
-										style={inlinkedCollapsed ? { display: 'none' }
-											: centered ? { flexGrow: 1 } : {}
-										}>
-										<div className="">
 
-											<div className={classes.inlinkedEntries} >
-												{entryHeader}
-												<div
-														dangerouslySetInnerHTML={{ __html: extended.inner.innerHTML }}
-														className={classes.inlinkedEntry}
-													/>
-											</div>
+										<div 
+											className="tree-item-icon collapse-icon"
+											style={{
+												display: 'flex',
+												alignItems: 'center',
+												justifyContent: 'center',
+												width: '32px',
+												height: '32px',
+												flexShrink: 0,
+											}}
+										>
+											<svg 
+												xmlns="http://www.w3.org/2000/svg" 
+												width="20" 
+												height="20" 
+												viewBox="0 0 24 24" 
+												fill="none" 
+												stroke="currentColor" 
+												strokeWidth="2" 
+												strokeLinecap="round" 
+												strokeLinejoin="round" 
+												style={{
+													transform: inlinkedCollapsed ? 'rotate(0deg)' : 'rotate(180deg)',
+													transition: 'transform 0.2s ease',
+												}}
+											>
+												<path d="M6 9l6 6 6-6"></path>
+											</svg>
 										</div>
 									</div>
 
+									<div className="search-result-file-matches"
+										style={inlinkedCollapsed ? { display: 'none' } : { width: '100%', marginTop: '4px' }}
+									>
+										<div className={classes.inlinkedEntries} >
+											<div
+												dangerouslySetInnerHTML={{ __html: extended.inner.innerHTML }}
+												className={classes.inlinkedEntry}
+											/>
+										</div>
+									</div>
 
 								</div>
-
 
 							)
 						})}

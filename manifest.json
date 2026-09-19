@@ -1,10 +1,10 @@
 {
-	"id": "influx-section-excerpts",
-	"name": "Influx Section Excerpts",
-	"version": "2.3.1",
+	"id": "backlinks-recall",
+	"name": "Backlinks Recall",
+	"version": "2.4.0",
 	"minAppVersion": "1.0.0",
-	"description": "Transform your Obsidian backlinks from simple links into rich, contextual excerpts. See the actual content surrounding each link, turning your note connections into genuine insights.",
-	"author": "Jens M Gleditsch",
-	"authorUrl": "https://github.com/jensmtg",
+	"description": "Living timeline of backlinks and contextual section excerpts with Amplenote-style mobile UX.",
+	"author": "Josef Romeo & Jens M Gleditsch",
+	"authorUrl": "https://github.com/yosefdc7",
 	"isDesktopOnly": false
 }

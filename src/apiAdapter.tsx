@@ -33,10 +33,12 @@ export class ApiAdapter extends Component {
     private regexCache: Map<string, RegExp | null> = new Map();
     // Sentinel value to mark invalid regex patterns
     private static readonly INVALID_REGEX_SENTINEL: RegExp | null = null;
+    plugin?: ObsidianInflux;
 
-    constructor(app: App) {
+    constructor(app: App, plugin?: ObsidianInflux) {
         super();
         this.app = app;
+        this.plugin = plugin;
     }
     
     /** =================
@@ -100,10 +102,21 @@ export class ApiAdapter extends Component {
             return this.settingsCache;
         }
 
+        const pluginSettings = this.plugin?.data?.settings;
+        // Fallback to app.plugins if not injected directly
         // @ts-expect-error - plugins.plugins is not officially typed in App
-        const settings = this.app.plugins?.plugins?.influx?.data?.settings ?? DEFAULT_SETTINGS;
-        // Ensure we have a complete settings object
-        this.settingsCache = { ...DEFAULT_SETTINGS, ...settings } as ObsidianInfluxSettings;
+        const legacySettings = this.app.plugins?.plugins?.['backlinks-recall']?.data?.settings ?? this.app.plugins?.plugins?.['influx-section-excerpts']?.data?.settings ?? this.app.plugins?.plugins?.influx?.data?.settings;
+        const settings = pluginSettings ?? legacySettings ?? DEFAULT_SETTINGS;
+
+        // Ensure we have a complete settings object with enforced timeline defaults
+        this.settingsCache = {
+            ...DEFAULT_SETTINGS,
+            ...settings,
+            variant: 'ROWS',
+            sortingPrinciple: 'NEWEST_FIRST',
+            sortingAttribute: 'ctime',
+            entryHeaderVisible: false,
+        } as ObsidianInfluxSettings;
         // Pre-compile all regex patterns to eliminate JIT overhead on critical path
         this.preCompileRegexPatterns(this.settingsCache);
         return this.settingsCache;

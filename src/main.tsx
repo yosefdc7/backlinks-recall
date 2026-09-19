@@ -59,9 +59,9 @@ export const DEFAULT_SETTINGS: Partial<ObsidianInfluxSettings> = {
 	sourceInclusionPattern: [],
 	sourceExclusionPattern: [],
 	listLimit: 0,
-	variant: 'CENTER_ALIGNED',
+	variant: 'ROWS',
 	fontSize: 13,
-	entryHeaderVisible: true,
+	entryHeaderVisible: false,
 	influxAtTopOfPage: false,
 	includeFrontmatterLinks: false,
 	frontmatterProperties: [],
@@ -135,10 +135,10 @@ export default class ObsidianInflux extends Plugin {
 	private previewFileHashes: Map<string, string> = new Map();
 
 	async onload(): Promise<void> {
-		console.log(`Loading plugin: Influx v${this.manifest.version}`);
+		console.log(`Loading plugin: Backlinks Recall v${this.manifest.version}`);
 
 		this.componentCallbacks = {}
-		this.api = new ApiAdapter(this.app)
+		this.api = new ApiAdapter(this.app, this)
 		this.stylesheet = createStyleSheet(this.api)
 		this.stylesheetForPreview = createStyleSheet(this.api, true)
 		this.data = await this.loadDataInitially()
@@ -171,8 +171,9 @@ export default class ObsidianInflux extends Plugin {
 			this.triggerUpdates('layout-change');
 		}));
 
-		// Make plugin instance globally accessible for CodeMirror extensions
+		// Make plugin instance globally accessible
 		(window as any).influxPlugin = this;
+		(window as any).backlinksRecallPlugin = this;
 
 		// Expose debug functions to browser console
 		if (DEBUG_MODE) {
@@ -203,7 +204,12 @@ export default class ObsidianInflux extends Plugin {
 	async loadDataInitially() {
 		const _data = await this.loadData()
 		const data: Data = {
-			settings: Object.assign({}, DEFAULT_SETTINGS, _data?.settings),
+			settings: Object.assign({}, DEFAULT_SETTINGS, _data?.settings, {
+				variant: 'ROWS',
+				sortingPrinciple: 'NEWEST_FIRST',
+				sortingAttribute: 'ctime',
+				entryHeaderVisible: false,
+			}),
 		}
 		return data
 	}
@@ -215,6 +221,7 @@ export default class ObsidianInflux extends Plugin {
 	}
 
 	async saveSettingsByParams(settings: ObsidianInfluxSettings) {
+		this.api.invalidateSettingsCache();
 		await this.saveData({ ...this.data, settings: settings });
 		this.triggerUpdates('save-settings')
 	}
