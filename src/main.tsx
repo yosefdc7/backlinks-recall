@@ -462,8 +462,13 @@ export default class ObsidianInflux extends Plugin {
 		let anchor: Root;
 
 		if (existingContainer) {
-			// Reuse existing container and root
-			anchor = this.previewReactRoots.get(existingContainer)!
+			// Reuse existing container and root, or recreate if missing
+			let existingRoot = this.previewReactRoots.get(existingContainer);
+			if (!existingRoot) {
+				existingRoot = createRoot(existingContainer);
+				this.previewReactRoots.set(existingContainer, existingRoot);
+			}
+			anchor = existingRoot;
 		} else {
 			// Clean up any old containers and their parent wrappers
 			const oldContainers = previewDiv.querySelectorAll("influx-preview-container")
